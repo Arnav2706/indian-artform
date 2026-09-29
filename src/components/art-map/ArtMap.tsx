@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { Compass, MapPin, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ const InteractiveMap = lazy(() => import("./InteractiveMap"));
 
 type Filter = "All" | ArtCategory;
 
-export function ArtMap({ selected, onSelect, onStory }: { selected: ArtLocation | null; onSelect: (location: ArtLocation) => void; onStory: (location: ArtLocation) => void }) {
+export function ArtMap({ selected, onSelect }: { selected: ArtLocation | null; onSelect: (location: ArtLocation) => void }) {
   const [filter, setFilter] = useState<Filter>("All");
   const [query, setQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -67,7 +68,7 @@ export function ArtMap({ selected, onSelect, onStory }: { selected: ArtLocation 
                 <p className="mt-1 text-xs uppercase text-muted-foreground">{selected.period}</p>
                 <p className="mt-5 text-sm leading-6 text-muted-foreground">{selected.description}</p>
                 <div className="mt-5 border-l-2 border-gold pl-4"><p className="text-xs font-bold uppercase text-primary">Historical significance</p><p className="mt-1 text-sm leading-6 text-muted-foreground">{selected.historicalSignificance}</p></div>
-                <div className="mt-auto pt-7"><Button variant="museum" className="w-full" onClick={() => onStory(selected)}><Sparkles /> View Full Story</Button></div>
+                <div className="mt-auto pt-7"><Button asChild variant="museum" className="w-full"><Link to="/art/$artId" params={{ artId: selected.id }}><Sparkles /> View Full Story</Link></Button></div>
               </div>
             </div> : <div className="grid min-h-[28rem] h-full place-items-center p-10 text-center"><div><span className="mx-auto grid h-14 w-14 place-items-center rounded-full border border-primary/20 bg-muted"><MapPin className="h-6 w-6 text-primary" /></span><h3 className="mt-6 font-display text-3xl">Begin your journey</h3><p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-muted-foreground">Select a location on the map to begin your journey through Indian art.</p></div></div>}
           </aside>

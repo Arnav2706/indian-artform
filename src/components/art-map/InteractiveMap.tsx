@@ -1,5 +1,6 @@
 "use client";
 
+import { Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
@@ -43,7 +44,10 @@ export default function InteractiveMap({ locations, selected, onSelect }: Intera
               <p className="font-display text-lg text-foreground">{location.name}</p>
               <p className="mt-0.5 text-xs uppercase text-muted-foreground">{location.state}</p>
               <p className="mt-2 text-sm text-foreground">{location.artForm}</p>
-              <button type="button" className="mt-3 text-sm font-semibold text-primary underline-offset-4 hover:underline" onClick={() => onSelect(location)}>Explore Art →</button>
+              <div className="mt-3 flex gap-3">
+                <button type="button" className="text-sm font-semibold text-primary underline-offset-4 hover:underline" onClick={() => onSelect(location)}>Select</button>
+                <Link to="/art/$artId" params={{ artId: location.id }} className="text-sm font-semibold text-primary underline-offset-4 hover:underline">Full Story →</Link>
+              </div>
             </div>
           </Popup>
         </Marker>
