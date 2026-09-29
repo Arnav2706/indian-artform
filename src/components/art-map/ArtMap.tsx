@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { Compass, MapPin, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,8 @@ export function ArtMap({ selected, onSelect, onStory }: { selected: ArtLocation 
   const [filter, setFilter] = useState<Filter>("All");
   const [query, setQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
+  useEffect(() => setMapReady(true), []);
   const visible = useMemo(() => artLocations.filter((location) => filter === "All" || location.categories.includes(filter)), [filter]);
   const results = useMemo(() => {
     const term = query.trim().toLowerCase();
@@ -49,7 +51,7 @@ export function ArtMap({ selected, onSelect, onStory }: { selected: ArtLocation 
 
         <div className="map-stage grid overflow-hidden rounded-lg border border-background/10 bg-background lg:grid-cols-[minmax(0,2fr)_minmax(20rem,1fr)]">
           <div className="relative h-[32rem] min-w-0 lg:h-[43rem]">
-            <Suspense fallback={<div className="grid h-full place-items-center bg-muted text-foreground"><span className="animate-pulse">Opening the map…</span></div>}><InteractiveMap locations={visible} selected={selected} onSelect={onSelect} /></Suspense>
+            {mapReady ? <Suspense fallback={<div className="grid h-full place-items-center bg-muted text-foreground"><span className="animate-pulse">Opening the map…</span></div>}><InteractiveMap locations={visible} selected={selected} onSelect={onSelect} /></Suspense> : <div className="grid h-full place-items-center bg-muted text-foreground"><span className="animate-pulse">Opening the map…</span></div>}
             <div className="absolute bottom-7 left-4 z-[500] hidden rounded-md border border-border bg-background/95 p-3 text-foreground shadow-lg backdrop-blur sm:block">
               <p className="mb-2 text-[10px] font-bold uppercase text-muted-foreground">Art form legend</p>
               <div className="flex flex-wrap gap-3 text-xs"><span><i className="legend-dot bg-primary" /> Painting</span><span><i className="legend-dot bg-terracotta" /> Architecture</span><span><i className="legend-dot bg-saffron" /> Folk</span><span><i className="legend-dot bg-charcoal" /> Tribal</span></div>
