@@ -46,7 +46,7 @@ export default function InteractiveMap({ locations, selected, onSelect }: Intera
               <p className="mt-2 text-sm text-foreground">{location.artForm}</p>
               <div className="mt-3 flex gap-3">
                 <button type="button" className="text-sm font-semibold text-primary underline-offset-4 hover:underline" onClick={() => onSelect(location)}>Select</button>
-                <Link to="/story/$locationId" params={{ locationId: location.id }} className="text-sm font-semibold text-gold underline-offset-4 hover:underline">Full Story →</Link>
+                <Link to="/art/$artId" params={{ artId: location.id }} className="text-sm font-semibold text-primary underline-offset-4 hover:underline">Full Story →</Link>
               </div>
             </div>
           </Popup>
