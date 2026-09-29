@@ -32,8 +32,8 @@ export const Route = createFileRoute("/art/$artId")({
 function ArtDestinationPage() {
   const location = Route.useLoaderData();
   const currentIndex = artLocations.findIndex((item) => item.id === location.id);
-  const previous = artLocations[(currentIndex - 1 + artLocations.length) % artLocations.length];
-  const next = artLocations[(currentIndex + 1) % artLocations.length];
+  const previous = artLocations.at((currentIndex - 1 + artLocations.length) % artLocations.length) ?? location;
+  const next = artLocations.at((currentIndex + 1) % artLocations.length) ?? location;
 
   return (
     <main className="min-h-screen bg-background text-foreground">
