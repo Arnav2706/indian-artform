@@ -13,3 +13,4 @@
 ## Project architecture
 - Keep all destination content in `src/data/artLocations.ts`; map, cards, search, panels, and dialogs must render from this source to prevent factual drift.
 - Keep Leaflet in the client-only map component; the page loads it lazily to preserve server rendering.
+- Render long-form destination stories through `/art/$artId` pages instead of overlays so they remain readable at normal browser zoom.

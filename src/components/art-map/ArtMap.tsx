@@ -68,7 +68,7 @@ export function ArtMap({ selected, onSelect }: { selected: ArtLocation | null; o
                 <p className="mt-1 text-xs uppercase text-muted-foreground">{selected.period}</p>
                 <p className="mt-5 text-sm leading-6 text-muted-foreground">{selected.description}</p>
                 <div className="mt-5 border-l-2 border-gold pl-4"><p className="text-xs font-bold uppercase text-primary">Historical significance</p><p className="mt-1 text-sm leading-6 text-muted-foreground">{selected.historicalSignificance}</p></div>
-                <div className="mt-auto pt-7"><Button asChild variant="museum" className="w-full"><Link to="/story/$locationId" params={{ locationId: selected.id }}><Sparkles /> View Full Story</Link></Button></div>
+                <div className="mt-auto pt-7"><Button asChild variant="museum" className="w-full"><Link to="/art/$artId" params={{ artId: selected.id }}><Sparkles /> View Full Story</Link></Button></div>
               </div>
             </div> : <div className="grid min-h-[28rem] h-full place-items-center p-10 text-center"><div><span className="mx-auto grid h-14 w-14 place-items-center rounded-full border border-primary/20 bg-muted"><MapPin className="h-6 w-6 text-primary" /></span><h3 className="mt-6 font-display text-3xl">Begin your journey</h3><p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-muted-foreground">Select a location on the map to begin your journey through Indian art.</p></div></div>}
           </aside>
