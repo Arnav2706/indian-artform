@@ -42,7 +42,7 @@
 .leaflet-control-zoom a { color: var(--foreground); background: var(--background); border-color: var(--border); }
 .leaflet-control-attribution { font-size: 9px; background: color-mix(in oklab, var(--background) 88%, transparent); }
 .art-marker-shell { background: transparent; border: 0; }
-.art-marker { position: relative; display: grid; height: 38px; width: 38px; place-items: center; border-radius: 50% 50% 50% 8%; transform: rotate(-45deg); border: 2px solid var(--background); background: var(--primary); box-shadow: 0 6px 18px color-mix(in oklab, var(--foreground) 35%, transparent); transition: transform .25s ease; }
+.art-marker { pointer-events: none; position: relative; display: grid; height: 38px; width: 38px; place-items: center; border-radius: 50% 50% 50% 8%; transform: rotate(-45deg); border: 2px solid var(--background); background: var(--primary); box-shadow: 0 6px 18px color-mix(in oklab, var(--foreground) 35%, transparent); transition: transform .25s ease; }
 .art-marker > span { height: 10px; width: 10px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 4px color-mix(in oklab, var(--background) 32%, transparent); }
 .art-marker--architecture { background: var(--terracotta); }.art-marker--folk { background: var(--saffron); }.art-marker--tribal { background: var(--charcoal); }
 .art-marker.is-selected { transform: rotate(-45deg) scale(1.2); animation: marker-pulse 1.7s ease-in-out infinite; }
