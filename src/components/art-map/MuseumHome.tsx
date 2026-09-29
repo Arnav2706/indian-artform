@@ -1,0 +1,60 @@
+import { useEffect, useState } from "react";
+import { ArrowDown, ArrowRight, Compass, Feather, LandPlot, Menu, Palette, Sparkles, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArtMap } from "./ArtMap";
+import { ArtStoryDialog } from "./ArtStoryDialog";
+import { artLocations } from "@/data/artLocations";
+import type { ArtLocation } from "@/types/art";
+import ajanta from "@/assets/ajanta.jpg";
+
+const nav = [{ label: "Home", id: "home" }, { label: "Explore Map", id: "map" }, { label: "Art Locations", id: "locations" }, { label: "About", id: "about" }];
+const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+function Reveal({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <div className={`reveal ${className}`}>{children}</div>;
+}
+
+export function MuseumHome() {
+  const [selected, setSelected] = useState<ArtLocation | null>(null);
+  const [story, setStory] = useState<ArtLocation | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  useEffect(() => {
+    const elements = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add("is-visible")), { threshold: 0.12 });
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, []);
+  const explore = (location: ArtLocation) => { setSelected(location); scrollTo("map"); };
+
+  return <main className="overflow-hidden bg-background">
+    <header className="fixed inset-x-0 top-0 z-[1100] border-b border-background/15 bg-foreground/90 text-background backdrop-blur-xl">
+      <div className="mx-auto grid h-18 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center px-5 sm:px-8">
+        <button type="button" onClick={() => scrollTo("home")} className="flex min-w-0 items-center gap-3 text-left" aria-label="Indian Art Map home"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-gold/60"><span className="text-lg text-gold">✦</span></span><span className="truncate font-display text-lg">Indian Art Map</span></button>
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">{nav.map((item) => <button key={item.id} type="button" onClick={() => scrollTo(item.id)} className="text-xs font-semibold uppercase text-background/70 transition-colors hover:text-gold">{item.label}</button>)}<Button size="sm" variant="gold" onClick={() => scrollTo("map")}>Explore India <ArrowRight /></Button></nav>
+        <Button variant="ghost" size="icon" className="text-background hover:bg-background/10 hover:text-gold lg:hidden" onClick={() => setMenuOpen((value) => !value)} aria-label="Toggle navigation">{menuOpen ? <X /> : <Menu />}</Button>
+      </div>
+      {menuOpen && <nav className="border-t border-background/10 bg-foreground px-5 py-5 lg:hidden">{nav.map((item) => <button key={item.id} type="button" className="block w-full border-b border-background/10 py-3 text-left font-display text-xl" onClick={() => { scrollTo(item.id); setMenuOpen(false); }}>{item.label}</button>)}</nav>}
+    </header>
+
+    <section id="home" className="relative flex min-h-[min(860px,92vh)] items-end overflow-hidden bg-foreground pt-18 text-background">
+      <img src={ajanta} alt="Ancient Buddhist murals inside the Ajanta Caves" width={1200} height={800} className="absolute inset-0 h-full w-full object-cover opacity-45" />
+      <div className="absolute inset-0 bg-linear-to-r from-foreground via-foreground/75 to-transparent" /><div className="absolute inset-0 bg-linear-to-t from-foreground via-transparent to-foreground/20" /><div className="heritage-pattern absolute inset-0 opacity-20" />
+      <div className="relative mx-auto w-full max-w-7xl px-5 pb-16 sm:px-8 sm:pb-20 lg:pb-24"><div className="max-w-4xl animate-hero-in"><p className="section-kicker text-gold">EXPLORE INDIA THROUGH ART, HERITAGE & CULTURE</p><h1 className="mt-5 max-w-4xl font-display text-5xl leading-[1.02] sm:text-7xl lg:text-[5.6rem]">Journey Through India’s <em className="font-normal text-gold">Artistic Heritage</em></h1><p className="mt-6 max-w-2xl text-base leading-7 text-background/75 sm:text-lg">Discover centuries of Indian creativity through an interactive journey across the places, traditions, monuments and communities that shaped the country’s artistic identity.</p><div className="mt-8 flex flex-wrap gap-3"><Button size="lg" variant="gold" onClick={() => scrollTo("map")}>Explore the Map <Compass /></Button><Button size="lg" variant="museumDark" onClick={() => scrollTo("locations")}>Discover Art Forms <ArrowDown /></Button></div><p className="mt-9 text-xs font-semibold uppercase text-background/55">8 Destinations <span className="mx-2 text-gold">•</span> Centuries of Art <span className="mx-2 text-gold">•</span> One Interactive Journey</p></div></div>
+    </section>
+
+    <section className="py-20 sm:py-28"><div className="mx-auto max-w-7xl px-5 sm:px-8"><Reveal className="grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:items-start"><div><p className="section-kicker">A COUNTRY AS CANVAS</p><h2 className="mt-4 font-display text-4xl sm:text-6xl">Art Across India</h2></div><div><p className="max-w-2xl text-lg leading-8 text-muted-foreground">India’s artistic heritage is deeply connected to geography. From ancient Buddhist cave paintings and monumental temple sculptures to vibrant folk and tribal traditions, every region tells a unique artistic story.</p><div className="mt-10 grid gap-7 sm:grid-cols-3">{[[LandPlot,"Ancient Heritage","Traditions spanning more than two millennia."],[Compass,"Regional Traditions","Geography and communities shaped distinctive forms."],[Feather,"Living Art","Practices carried forward by artists today."]].map(([Icon,title,text]) => { const I=Icon as typeof LandPlot; return <div key={title as string} className="border-t border-gold pt-5"><I className="h-5 w-5 text-primary"/><h3 className="mt-4 font-display text-xl">{title as string}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{text as string}</p></div>; })}</div></div></Reveal></div></section>
+
+    <ArtMap selected={selected} onSelect={setSelected} onStory={setStory} />
+
+    <section id="locations" className="scroll-mt-20 py-20 sm:py-28"><div className="mx-auto max-w-7xl px-5 sm:px-8"><Reveal><div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p className="section-kicker">THE COLLECTION</p><h2 className="mt-3 font-display text-4xl sm:text-6xl">Explore Art Destinations</h2></div><p className="max-w-sm text-sm leading-6 text-muted-foreground">Eight places. Distinct traditions. A shared story of artistic imagination.</p></div></Reveal><div className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">{artLocations.map((location, index) => <Reveal key={location.id} className={index % 2 ? "lg:pt-12" : ""}><article className="group"><div className="relative aspect-[4/5] overflow-hidden rounded-md bg-muted"><img loading="lazy" src={location.image} alt={location.imageAlt} width={1200} height={800} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"/><div className="absolute inset-0 bg-linear-to-t from-foreground/75 via-transparent to-transparent"/><span className="absolute left-4 top-4 rounded-full bg-background/90 px-3 py-1 text-[10px] font-bold uppercase text-primary backdrop-blur">{location.categories[0]}</span><div className="absolute inset-x-0 bottom-0 p-5 text-background"><p className="text-xs uppercase text-background/65">{location.state}</p><h3 className="mt-1 font-display text-3xl">{location.name}</h3></div></div><p className="mt-4 text-sm leading-6 text-muted-foreground">{location.shortDescription}</p><Button variant="link" className="mt-2 h-auto p-0" onClick={() => explore(location)}>Explore <ArrowRight /></Button></article></Reveal>)}</div></div></section>
+
+    <section className="bg-muted py-20 sm:py-28"><div className="mx-auto max-w-7xl px-5 sm:px-8"><Reveal><p className="section-kicker">ACROSS THE CENTURIES</p><h2 className="mt-3 font-display text-4xl sm:text-6xl">A Journey Through Indian Art</h2></Reveal><div className="timeline mt-14 grid gap-8 md:grid-cols-6">{[["2nd Century BCE","Ajanta artistic traditions begin"],["6th–10th Century","Ellora’s rock-cut monuments"],["Chola Period","Thanjavur becomes a temple art centre"],["10th–12th Century","Khajuraho temple art flourishes"],["Regional Traditions","Miniature painting and Pattachitra develop"],["Living Traditions","Madhubani and Warli continue to evolve"]].map(([period,event],i)=><Reveal key={period}><div className="relative pl-8 md:pl-0 md:pt-8"><span className="timeline-node">{i+1}</span><p className="text-xs font-bold uppercase text-primary">{period}</p><p className="mt-2 font-display text-xl leading-6">{event}</p></div></Reveal>)}</div></div></section>
+
+    <section className="py-20 sm:py-28"><div className="mx-auto max-w-7xl px-5 sm:px-8"><Reveal className="text-center"><p className="section-kicker">DETAILS IN THE MARGINS</p><h2 className="mt-3 font-display text-4xl sm:text-6xl">Did You Know?</h2></Reveal><div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">{["Ajanta’s murals were created using mineral and natural pigments.","Ellora contains monuments associated with Hinduism, Buddhism and Jainism.","Madhubani paintings traditionally decorated the walls of homes in the Mithila region.","Warli artists use simple geometric forms to represent people, animals and everyday community life."].map((fact,i)=><Reveal key={fact}><article className="fact-card h-full rounded-md border border-border p-7"><span className="font-display text-5xl text-gold">0{i+1}</span><Sparkles className="mt-8 h-5 w-5 text-primary"/><p className="mt-4 font-display text-xl leading-7">{fact}</p></article></Reveal>)}</div></div></section>
+
+    <section id="about" className="scroll-mt-20 bg-primary py-20 text-primary-foreground sm:py-28"><div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[1.2fr_.8fr]"><Reveal><p className="section-kicker text-gold">ABOUT THE PROJECT</p><h2 className="mt-4 max-w-2xl font-display text-4xl sm:text-6xl">About the Interactive Indian Art Map</h2><p className="mt-6 max-w-3xl text-base leading-8 text-primary-foreground/75">The Interactive Indian Art Map is an educational digital experience designed to explore the geographic spread and cultural diversity of Indian art. By connecting artistic traditions to the places where they developed, the project demonstrates how geography, religion, royal patronage, communities and local culture contributed to India’s rich artistic heritage.</p></Reveal><Reveal className="border-l border-gold/50 pl-7 lg:self-end"><p className="text-xs font-bold uppercase text-gold">Project Objective</p><p className="mt-4 font-display text-2xl leading-8">To explore the geographic spread and influence of different art styles across India through an interactive digital experience.</p></Reveal></div></section>
+
+    <footer className="bg-foreground py-12 text-background"><div className="mx-auto max-w-7xl px-5 sm:px-8"><div className="grid gap-8 border-b border-background/15 pb-10 sm:grid-cols-[1fr_auto]"><div><h2 className="font-display text-2xl">Interactive Indian Art Map</h2><p className="mt-2 text-sm text-background/55">Exploring India’s artistic heritage, one region at a time.</p></div><nav className="flex flex-wrap gap-5 text-xs uppercase text-background/65">{nav.map((item)=><button key={item.id} type="button" onClick={()=>scrollTo(item.id)} className="hover:text-gold">{item.label.replace("Explore ","")}</button>)}</nav></div><div className="flex flex-col gap-2 pt-6 text-xs text-background/45 sm:flex-row sm:justify-between"><p>Created as an educational project on Indian Art History.</p><p>Map data © OpenStreetMap contributors</p></div></div></footer>
+    <ArtStoryDialog location={story} onClose={() => setStory(null)} />
+  </main>;
+}
